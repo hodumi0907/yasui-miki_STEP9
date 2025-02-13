@@ -66,7 +66,7 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([ // '|'はバリデーションルールを複数指定
+        $request -> validate([ // '|'はバリデーションルールを複数指定
             'product_name' => 'required', //required＝必須
             'company_id' => 'required',
             'price' => 'required | integer | min:0', //必須、整数のみ（-1、0.1不可）、0でも可
