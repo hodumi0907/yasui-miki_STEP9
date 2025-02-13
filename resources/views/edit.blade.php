@@ -109,8 +109,15 @@
 
                             <button type = "submit" class = "btn btn-primary">更新</button>
 
-                            <a href = "{{ route('products.show', $product) }}"
-                                class = "btn btn-primary mt-1 mb-3">戻る</a>
+                            <!-- 検索条件を保持したまま戻る -->
+                            <a
+                                href="{{ route('products.show', [
+                                    'product' => $product->id, 'search' => request('search'),
+                                    'company_id' => request('company_id')
+                                    ]) }}"
+                                class="btn btn-primary mt-1 mb-3">戻る
+                            </a>
+
                         </form>
                     </div>
                 </div>

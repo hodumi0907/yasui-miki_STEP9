@@ -12,7 +12,7 @@
         <dd class = "col-sm-9">{{$product -> product_name}}</dd>
 
         <dt class = "col-sm-3">メーカー</dt>
-        <dd class = "col-sm-9">{{$product -> company->name}}</dd>
+        <dd class = "col-sm-9">{{ $product->company->company_name }}</dd>
 
         <dt class = "col-sm-3">価格</dt>
         <dd class = "col-sm-9">{{ $product -> price }}</dd>
@@ -28,7 +28,10 @@
     </dl>
 
     <a href = "{{ route('products.edit', $product) }}" class = "btn btn-primary btn-sm mx-3">編集</a>
-    <a href="{{ route('products.index') }}" class="btn btn-primary mt-3">商品一覧画面に戻る</a>
-
+    <!-- search & company_id のパラメータを維持して一覧画面に戻る⇒indexで検索結果を保持したまま表示 -->
+    <a
+        href="{{ route('products.index', ['search' => request('search'), 'company_id' => request('company_id')]) }}"
+        class="btn btn-primary mt-3"
+    >商品一覧画面に戻る</a>
 </div>
 @endsection

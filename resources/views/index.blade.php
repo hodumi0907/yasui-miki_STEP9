@@ -62,8 +62,12 @@
                         <td>{{ $product -> stock }}</td>
                         <td>{{ $product -> company -> company_name }}</td>
                         <td>
-                            <a href = "{{ route('products.show', $product) }}" 
-                                class = "btn btn-info btn-sm mx-1">詳細</a>
+                            <!-- search & company_id のパラメータが付いた状態でリスト表示しshow.blade.phpに引き継ぐ -->
+                            <a href= 
+                                "{{ route('products.show', ['product' => $product->id,
+                                'search' => request('search'), 'company_id' => request('company_id')]) }}"
+                                class="btn btn-info btn-sm mx-1">詳細
+                            </a>
                             <form
                                 method="POST" 
                                 action="{{ route('products.destroy', 

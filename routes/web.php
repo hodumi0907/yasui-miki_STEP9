@@ -32,4 +32,6 @@ Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('products', ProductsController::class); //商品関連へのリソースルート
     Route::get('/index', [App\Http\Controllers\ProductsController::class, 'index']) -> name('index');//商品一覧へのルート
+    Route::get('/create', [App\Http\Controllers\ProductsController::class, 'create'])->name('create'); // 商品新規登録画面
+
 });

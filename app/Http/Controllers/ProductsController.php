@@ -66,13 +66,13 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([ // '|'はバリデーションルールを複数指定できる
-            'product_name' => 'required', //requiredは必須という意味
+        $request->validate([ // '|'はバリデーションルールを複数指定
+            'product_name' => 'required', //required＝必須
             'company_id' => 'required',
-            'price' => 'required|integer|min:0', //必須、整数のみ（-1、0.1不可）、0でも可
-            'stock' => 'required|integer|min:0',
+            'price' => 'required | integer | min:0', //必須、整数のみ（-1、0.1不可）、0でも可
+            'stock' => 'required | integer | min:0',
             'comment' => 'nullable', //nullableは未入力でOKという意味
-            'img_path' => 'nullable|image',
+            'img_path' => 'nullable | image',
         ]);
 
         //新しく商品データを作る。そのための情報をリクエストから取得。
@@ -107,11 +107,15 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         //resources/views/products/show.blade.phpを表示する
+        //商品詳細でsearch と company_idを受け取る
         $product = Product::with('company') -> findOrFail($id);
-        return view('show', compact('product'));
+        return view('show', compact('product')) -> with([
+            'search' => $request -> query('search'),
+            'company_id' => $request -> query('company_id')
+        ]);
     }
 
     /**
@@ -151,16 +155,18 @@ class ProductsController extends Controller
             'stock' => 'required',
         ]);
 
-        $product -> product_name = $request -> product_name;//入力された商品名をプロパティに代入
-        $product -> price = $request -> price;//価格
-        $product -> stock = $request -> stock;//在庫数
-
-        //データベースに更新（入力）内容を保存
-        $product -> save();
+        $product -> product_name = $request -> product_name; //入力された商品名をプロパティに代入
+        $product -> price = $request -> price; //価格
+        $product -> stock = $request -> stock; //在庫数
+        $product -> save(); //データベースに更新（入力）内容を保存
 
         // 全ての処理終了後のリダイレクト先
         return redirect()
-            -> route('products.edit', $product)//商品編集ページにリダイレクト
+            -> route('products.show', [ //商品編集ページにリダイレクト
+                'product' => $product -> id,
+                'search' => $request -> query('search'), // 検索条件を渡す
+                'company_id' => $request -> query('company_id'),
+            ])
             -> with('success', '更新完了');//送信成功したときのメッセージ
     }
 
