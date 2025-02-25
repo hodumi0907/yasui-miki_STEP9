@@ -3,13 +3,7 @@
 @section('content')
 <div class = "container">
     <h1 class = "mb-4">商品情報一覧</h1>
-
-    @if (session('success')) <!-- 削除成功メッセージ -->
-        <div class = "alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
+    
     <div class = "search mt-5"> <!-- 検索フォーム -->
         <form action = "{{ route('products.index') }}" method = "GET" class = "row g-3">
             <div class = "col-sm-12 col-md-3"> <!-- 検索キーワード -->
@@ -48,7 +42,7 @@
                     <th>価格</th>
                     <th>在庫数</th>
                     <th>メーカー名</th>
-                    <th><a href = "{{ route('products.create') }}"class = "btn btn-primary mb-3">商品新規登録</a></th>
+                    <th><a href = "{{ route('products.create') }}" class = "btn btn-primary mb-3">商品新規登録</a></th>
                 </tr>
             </thead>
 

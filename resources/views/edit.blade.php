@@ -5,11 +5,6 @@
         <div class = "row justify-content-center">
             <div class = "col-md-8">
                 <div class = "card">
-                    @if (session('success'))
-                        <div class = "alert alert-success">
-                        {{ session('success') }} <!-- 更新完了後のメッセージを表示 -->
-                        </div>
-                    @endif
 
                     <div class = "card-header"><h2>商品情報を変更する</h2></div>
 
@@ -34,12 +29,14 @@
                                 <label for = "product_name" class = "form-label">商品名</label>
                                 <input
                                     type = "text"
-                                    class = "form-control"
+                                    class = "form-control @error('product_name') is-invalid @enderror"
                                     id = "product_name"
                                     name = "product_name"
                                     value = "{{ $product->product_name }}"
-                                    required
                                 >
+                                    @error('product_name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                             </div>
 
                             <div class = "mb-3">
@@ -48,7 +45,6 @@
                                     class = "form-select"
                                     id = "company_id"
                                     name = "company_id"
-                                    required
                                 >
                                     
                                     @foreach($companies as $company)
@@ -64,24 +60,28 @@
                                 <label for = "price" class = "form-label">価格</label>
                                 <input
                                     type = "number"
-                                    class = "form-control"
+                                    class = "form-control @error('price') is-invalid @enderror"
                                     id = "price"
                                     name = "price"
                                     value = "{{ $product->price }}"
-                                    required
                                 >
+                                    @error('price')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                             </div>
 
                             <div class="mb-3">
                                 <label for = "stock" class = "form-label">在庫数</label>
                                 <input
                                     type = "number"
-                                    class = "form-control"
+                                    class = "form-control @error('stock') is-invalid @enderror"
                                     id = "stock"
                                     name = "stock"
                                     value = "{{ $product->stock }}"
-                                    required
                                 >
+                                @error('stock')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="mb-3">
@@ -101,10 +101,13 @@
                                     id = "img_path"
                                     type = "file"
                                     name = "img_path"
-                                    class = "form-control"
+                                    class = "form-control @error('img_path') is-invalid @enderror"
+                                    accept="image/jpeg,image/png,image/gif"
                                 >
-                                <img
-                                    src = "{{ asset($product->img_path) }}" alt = "商品画像" class = "product-image">
+                                @error('img_path')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <img src = "{{ asset($product->img_path) }}" alt = "商品画像" class = "product-image">
                             </div>
 
                             <button type = "submit" class = "btn btn-primary">更新</button>

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ProductRequest;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Product;
 use App\Models\Company;
 
@@ -50,12 +53,12 @@ class ProductsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //Companyのデータベースから全ての会社情報を取得する
-        $companies = Company::all();
-        //'product.create'ビューにデータを渡して表示する
-        return view('create', compact('companies'));
+            //Companyのデータベースから全ての会社情報を取得する
+            $companies = Company::all();
+            //'product.create'ビューにデータを渡して表示する
+            return view('create', compact('companies'));
     }
 
     /**
@@ -64,41 +67,48 @@ class ProductsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        $request -> validate([ // '|'はバリデーションルールを複数指定
-            'product_name' => 'required', //required＝必須
-            'company_id' => 'required',
-            'price' => 'required | integer | min:0', //必須、整数のみ（-1、0.1不可）、0でも可
-            'stock' => 'required | integer | min:0',
-            'comment' => 'nullable', //nullableは未入力でOKという意味
-            'img_path' => 'nullable | image',
-        ]);
+        DB::beginTransaction();
+        try{
+            //新しく商品データを作るための情報をリクエストから取得。
+            $product = new Product([
+                'product_name' => $request -> get('product_name'), // 商品名
+                'company_id' => $request -> get('company_id'), // 会社ID
+                'price' => $request -> get('price'), // 価格
+                'stock' => $request -> get('stock'), // 在庫数
+                'comment' => $request -> get('comment'), // コメント
+            ]);
+            //ファイルがアップロードされていればそのパスを保存
+            if ($request -> hasFile('img_path')) {
+                $imageInfo = getimagesize($request -> file('img_path'));
+                // MIME タイプを取得
+                $mimeType = $imageInfo['mime'];
+                // 必要に応じてMIMEタイプをチェック（例:jpeg画像かどうか）
+                if (!in_array($mimeType, ['image/jpeg', 'image/png', 'image/gif'])) {
+                    return back() -> with('error', '無効な画像形式です。');
+                }
 
-        //新しく商品データを作る。そのための情報をリクエストから取得。
-        //newを使うと新しいインスタンスを作成できる
-        $product = new Product([
-            'product_name' => $request -> get('product_name'),
-            'company_id' => $request -> get('company_id'),
-            'price' => $request -> get('price'),
-            'stock' => $request -> get('stock'),
-            'comment' => $request -> get('comment'),
-        ]);
+                // アップロードされた画像を 'products' フォルダに保存
+                $filePath = $request -> file('img_path') -> store('products', 'public');
+                // 保存したファイルパスを商品情報にセット
+                $product -> img_path = '/storage/' . $filePath;
+            }
 
-        if ($request -> hasFile('img_path')){ //ファイルがアップロードされていればtrueを返す 
-            $filename = $request -> img_path -> getClientOriginalName(); //アップロードされたファイル名を取得する
-            //指定のディレクトリに保存する（保存先,ファイル名,保存先のストレージドライバ/storage/app/public）
-            $filePath = $request -> img_path -> storeAs('products', $filename, 'public');
-            //保存したファイルの公開URLをDBに保存する。'/storage/'は公開ディレクトリ（public/storage）
-            $product -> img_path = '/storage/' . $filePath;
-        }
+            //　商品情報をデータベースに保存
+            $product -> save();
+            // すべてが成功したらトランザクションをコミット
+            DB::commit();
 
-        //データベースに新しい商品として保存する
-        $product -> save();
-        //全ての処理が終わったら商品一覧画面に戻る
-        return redirect()
-            -> route('products.create', $product)
-            -> with('success', '商品登録が完了しました');//送信成功したときのメッセージ
+            // 商品登録が完了したメッセージと共に新規登録画面にリダイレクト
+            return redirect()
+                -> route('products.create', $product)
+                -> with('success', '商品登録が完了しました');
+            } catch (\Exception $e) {
+                // 例外が発生した場合はロールバック
+                DB::rollBack();
+                return back() -> with('error', '商品登録が出来ませんでした:' . $e -> getMessage());
+            }
     }
 
     /**
@@ -146,28 +156,40 @@ class ProductsController extends Controller
      */
     //$request＝フォームから送信されたデータを保持
     //自動的にデータベースから該当するレコードを取得し$productに代入
-    public function update(Request $request, Product $product)
+    public function update(ProductRequest $request, Product $product)
     {
-        //入力されたデータを確認し必要な情報が全て揃っているかチェック。
-        $request -> validate([
-            'product_name' => 'required',//'required'＝入力必須
-            'price' => 'required',
-            'stock' => 'required',
-        ]);
+        DB::beginTransaction();
+        try {           
+            $product -> product_name = $request -> product_name; //入力された商品名をプロパティに代入
+            $product -> price = $request -> price; //価格
+            $product -> stock = $request -> stock; //在庫数
+            $product -> comment = $request -> comment; // コメント
 
-        $product -> product_name = $request -> product_name; //入力された商品名をプロパティに代入
-        $product -> price = $request -> price; //価格
-        $product -> stock = $request -> stock; //在庫数
-        $product -> save(); //データベースに更新（入力）内容を保存
+            if ($request -> hasFile('img_path')) { //更新内容に画像ファイルが含まれていたときの処理
+                // すでに画像が保存されている場合、古い画像を削除する
+                if ($product -> img_path) {
+                    // 古い画像のパスから '/storage/' を取り除き、ストレージから削除
+                    Storage::disk('public') -> delete(str_replace('/storage/', '', $product -> img_path));
+                }
+                $filePath = $request -> file('img_path') -> store('products', 'public');// 新しい画像ファイルを 'products' フォルダに保存
+                $product -> img_path = '/storage/' . $filePath; // 保存された新しい画像のパスをデータベースに保存
+            }
 
-        // 全ての処理終了後のリダイレクト先
-        return redirect()
-            -> route('products.show', [ //商品編集ページにリダイレクト
-                'product' => $product -> id,
-                'search' => $request -> query('search'), // 検索条件を渡す
-                'company_id' => $request -> query('company_id'),
+            $product -> save();
+            DB::commit();
+
+            return redirect() // 全ての処理終了後のリダイレクト先
+                -> route('products.show', [ //商品編集ページにリダイレクト
+                    'product' => $product -> id,
+                    'search' => $request -> query('search'), // 検索条件を渡す
+                    'company_id' => $request -> query('company_id'),
             ])
-            -> with('success', '更新完了');//送信成功したときのメッセージ
+                -> with('success', '更新完了');//送信成功したときのメッセージ
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // エラーメッセージをセッションに保存し、リダイレクト
+            return back() -> with('error', '更新出来ませんでした：' . $e -> getMessage());
+        }
     }
 
     /**
@@ -179,13 +201,27 @@ class ProductsController extends Controller
     //指定された商品データを削除する
     public function destroy(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
-        $product -> delete();//該当する商品をデータベースから削除
-        return redirect()
-            -> route('products.index', [ //商品一覧ページへリダイレクト
-                'search' => $request -> query('search'), //現在のキーワードを取得
-                'company_id' => $request -> query('company_id')//現在のメーカー名を取得
-            ])
-            -> with('success', '商品を削除しました。');//削除成功のメッセージを記載
+        DB::beginTransaction();
+        try {
+            $product = Product::findOrFail($id); // 該当する商品IDをもとに、データベースから商品を検索
+            // 商品に画像が設定されている場合、その画像ファイルを削除
+            if ($product -> img_path) {
+                // ストレージから画像を削除（publicディスクの中から）
+                Storage::disk('public') -> delete(str_replace('/storage/', '', $product->img_path));
+            }
+            $product -> delete(); // データベースから商品情報を削除
+            DB::commit(); // すべての処理が正常に完了した場合、トランザクションをコミット
+            // 商品一覧ページにリダイレクトし、削除成功メッセージを表示
+            return redirect()
+                -> route('products.index', [
+                    'search' => $request -> query('search'), //現在のキーワードを取得
+                    'company_id' => $request -> query('company_id')//現在のメーカー名を取得
+                ])
+                -> with('success', '商品を削除しました。');//削除成功のメッセージを記載
+            } catch (\Exception $e) {
+                // 何かエラーが発生した場合、トランザクションをロールバックして変更をキャンセル
+                DB::rollBack();
+                return back() -> with('error', '削除が出来ませんでした' . $e -> getMessage());
+        }
     }
 }

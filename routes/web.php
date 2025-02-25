@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Auth; //"Auth"という部品（ユーザー認�
 Route::get('/', function () {
     //ログイン状態なら商品一覧ページ（index.blade.php / ProductControllerのindexメソッド）にリダイレクト
     if (Auth::check()) {
-        return redirect() -> route('index'); //ログイン状態なら商品一覧画面へリダイレクト
+        return redirect() -> route('products.index'); //ログイン状態なら商品一覧画面へリダイレクト
     } else {
         return redirect() -> route('login'); //未ログイン状態ならログイン画面へリダイレクト
     }
@@ -30,7 +30,11 @@ Auth::routes();
 
 //authミドルウェアで認証されたユーザーだけがアクセスできるルート
 Route::group(['middleware' => 'auth'], function () {
-    Route::resource('products', ProductsController::class); //商品関連へのリソースルート
-    Route::get('/index', [App\Http\Controllers\ProductsController::class, 'index']) -> name('index');//商品一覧へのルート
-    Route::get('/create', [App\Http\Controllers\ProductsController::class, 'create']) -> name('create'); // 商品新規登録画面
+    Route::get('/products', [ProductsController::class, 'index']) -> name('products.index');//商品一覧
+    Route::get('/products/create', [ProductsController::class, 'create']) -> name('products.create'); //商品新規登録画面
+    Route::get('/products/{product}', [ProductsController::class, 'show']) -> name('products.show'); //商品詳細ページ
+    Route::get('/products/{product}/edit', [ProductsController::class, 'edit']) -> name('products.edit'); //商品編集画面
+    Route::post('/products', [ProductsController::class, 'store']) -> name('products.store'); //商品登録処理
+    Route::put('/products/{product}', [ProductsController::class, 'update']) -> name('products.update'); //商品登録処理
+    Route::delete('/products/{product}', [ProductsController::class, 'destroy']) -> name('products.destroy'); //商品削除処理
 });
