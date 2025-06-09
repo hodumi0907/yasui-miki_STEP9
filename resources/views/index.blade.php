@@ -6,7 +6,7 @@
     
     <div class = "search mt-5"> <!-- 検索フォーム -->
         <form action = "{{ route('products.index') }}" method = "GET" class = "row g-3">
-            <div class = "col-sm-12 col-md-3"> <!-- 検索キーワード -->
+            <div class = "col-sm-12 col-md-3"> <!-- キーワード検索 -->
                 <input
                     type = "text"
                     name = "search"
@@ -16,16 +16,24 @@
                 >
             </div>
 
-            <div class = "col-sm-12 col-md-3"> <!-- 企業名検索 -->
-                <select name = "company_id" class = "form-control">
-                    <option value = "">メーカー名</option>
-                    @foreach ($companies as $company)
-                    <option value = "{{ $company->id }}"
-                        {{ request('company_id') == $company -> id ? 'selected' : '' }} >
-                        {{ $company -> company_name }}
-                    </option>
-                    @endforeach
-                </select>
+            <div class = "col-sm-12 col-md-2"> <!-- 価格の最小値 -->
+                <input
+                    type = "number"
+                    name = "price_min"
+                    class = "form-control"
+                    placeholder = "最低価格"
+                    value = "{{ request('price_min') }}"
+                >
+            </div>
+
+            <div class = "col-sm-12 col-md-2"> <!-- 価格の最大値 -->
+                <input
+                    type = "number"
+                    name = "price_max"
+                    class = "form-control"
+                    placeholder = "最高価格"
+                    value = "{{ request('price_max') }}"
+                >
             </div>
 
             <div class = "col-sm-12 col-md-1"> <!-- 検索ボタン -->
@@ -34,14 +42,13 @@
         </form>
     
         <table class="table table-striped">
-            <thead>
+            <thead> <!-- 各項目 -->
                 <tr>
-                    <th>ID</th> <!-- 各項目 -->
+                    <th>商品番号</th>
                     <th>商品画像</th>
                     <th>商品名</th>
+                    <th>商品説明</th>
                     <th>価格</th>
-                    <th>在庫数</th>
-                    <th>メーカー名</th>
                     <th><a href = "{{ route('products.create') }}" class = "btn btn-primary mb-3">商品新規登録</a></th>
                 </tr>
             </thead>
@@ -52,9 +59,8 @@
                         <td>{{ $product -> company_id }}</td>
                         <td><img src = "{{ asset($product -> img_path) }}" alt = "画像なし" width = "100"></td>
                         <td>{{ $product -> product_name }}</td>
+                        <td>{{ $product -> description }}</td>
                         <td>{{ $product -> price }}</td>
-                        <td>{{ $product -> stock }}</td>
-                        <td>{{ $product -> company -> company_name }}</td>
                         <td>
                             <!-- search & company_id のパラメータが付いた状態でリスト表示しshow.blade.phpに引き継ぐ -->
                             <a href= 
@@ -69,11 +75,6 @@
                                 class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button
-                                    type = "submit"
-                                    class = "btn btn-danger btn-sm mx-1"
-                                    onclick = "return confirm('削除して問題ないですか？')">削除
-                                </button>
                             </form>
                         </td>
                     </tr>

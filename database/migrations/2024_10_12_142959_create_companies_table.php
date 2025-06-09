@@ -14,10 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('companies', function (Blueprint $table) {
-            $table -> id();
+            $table -> bigIncrements('id');
             $table -> string('company_name');
-            $table -> string('street_address') -> nullable();
-            $table -> string('representative_name') -> nullable();
             $table -> timestamps(); //'created_at'と'updated_at'をまとめてLaravelのデフォルトメソッドにかえる
         });
     }

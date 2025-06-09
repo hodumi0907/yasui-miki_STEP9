@@ -14,11 +14,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        // 各Seederを順番に実行
+        $this->call([
+            CompaniesSeeder::class,
+            ProductsSeeder::class,
+            SalesSeeder::class,
+
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
-        // ]);
+        ]);
     }
 }

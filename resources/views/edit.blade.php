@@ -85,13 +85,13 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for = "comment" class = "form-label">コメント</label>
+                                <label for = "description" class = "form-label">商品説明</label>
                                 <textarea
-                                    id = "comment"
-                                    name = "comment"
+                                    id = "description"
+                                    name = "description"
                                     class = "form-control"
                                     rows = "3">
-                                    {{ $product->comment }}
+                                    {{ $product->description }}
                                 </textarea>
                             </div>
 

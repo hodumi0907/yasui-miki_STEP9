@@ -14,7 +14,7 @@ class Product extends Model//Productという名前のツールを作る
         'product_name',
         'stock',
         'price',
-        'comment',
+        'description',
         'img_path',
     ];
 

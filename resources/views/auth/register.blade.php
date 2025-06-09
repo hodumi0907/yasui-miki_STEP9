@@ -15,18 +15,59 @@
                             <div class = "row justify-content-center">
                                 <div class = "col-md-6">
                                     <input
-                                        id = "user_name"
+                                        id = "name"
                                         type = "text"
-                                        class = "form-control @error('user_name') is-invalid @enderror"
-                                        name = "user_name"
-                                        value = "{{ old('user_name') }}"
+                                        class = "form-control @error('name') is-invalid @enderror"
+                                        name = "name"
+                                        value = "{{ old('name') }}"
                                         required
                                         autocomplete = "name"
                                         autofocus
                                         placeholder = "ユーザー名"
                                     > <!-- input終了 -->
-                                    @error('user_name')
+                                    @error('name')
                                         <span class = "invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3"> <!-- 名前（漢字）入力フィールド -->
+                            <div class="row justify-content-center">
+                                <div class="col-md-6">
+                                    <input
+                                        id="name_kanji"
+                                        type="text"
+                                        class="form-control @error('name_kanji') is-invalid @enderror"
+                                        name="name_kanji"
+                                        value="{{ old('name_kanji') }}"
+                                        required
+                                        placeholder="名前（漢字）"
+                                    > <!-- input終了 -->
+                                    @error('name_kanji')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3"> <!-- 名前（カナ）入力フィールド -->
+                            <div class="row justify-content-center">
+                                <div class="col-md-6">
+                                    <input
+                                        id="name_kana"
+                                        type="text"
+                                        class="form-control @error('name_kana') is-invalid @enderror"
+                                        name="name_kana"
+                                        value="{{ old('name_kana') }}"
+                                        placeholder="名前（カナ）"
+                                    > <!-- input終了 -->
+                                    @error('name_kana')
+                                        <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
@@ -86,7 +127,7 @@
                                         name = "password_confirmation"
                                         required autocomplete = "new-password"
                                         placeholder = "パスワード（確認用）"
-                                    >  <!-- input終了 -->
+                                    > <!-- input終了 -->
                                 </div>
                             </div>
                         </div>

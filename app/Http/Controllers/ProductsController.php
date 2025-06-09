@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Product;
 use App\Models\Company;
+use Illuminate\Support\Facades\Auth;
 
 class ProductsController extends Controller
 {
@@ -18,34 +19,41 @@ class ProductsController extends Controller
      */
     public function index(Request $request)
     {
-        // 初期化: Productモデルのクエリビルダーを取得
-        // クエリビルダーを使って動的にデータベースに対する条件を追加していく
+        // 1.バリデーション
+        // price_min と price_max の値が数値（numeric）かつ0以上（min:0）であるかをチェック
+        $request->validate([
+            'price_min' => 'nullable|numeric|min:0',
+            'price_max' => 'nullable|numeric|min:0',
+        ]);
+
+        // 2.クエリビルダを作成（Productモデルをもとにデータベースから検索する準備）
         $query = Product::query();
 
-        // 検索パラメータ（search）がリクエストに含まれている場合
-        // 'product_name'（商品名）が検索ワードで部分一致する商品を絞り込む
+        // 3.「検索キーワード」が送られてきている場合（空文字でない場合）
         if ($request -> has('search') && $request -> search != '') {
-           // 商品名が部分一致するものを取得
             $query -> where('product_name', 'like', '%' . $request->search . '%');
         }
 
-        // 企業名（company_id）がリクエストに含まれている場合
-        // もし企業IDが指定されているなら、その企業に関連する商品を絞り込む
-        if ($request -> has('company_id') && $request -> company_id != '') {
-            // 企業IDで絞り込む
-            $query -> where('company_id', $request -> company_id);
+        // 4.「価格の下限」が送られてきている場合
+        if ($request->price_min !== null) {
+            // price が指定した下限以上のデータを絞り込む
+            $query->where('price', '>=', $request->price_min);
         }
 
-        // クエリに基づいて商品データを取得（検索条件があれば絞り込む）
-        // 絞り込まれた結果を$productsに格納
-        $products = $query -> get();
+        // 5.「価格の上限」が送られてきている場合
+        if ($request->price_max !== null) {
+            // price が指定した上限以下のデータを絞り込む
+            $query->where('price', '<=', $request->price_max);
+        }
 
-        // 企業のリストを取得（メーカー名検索のため）
-        // 企業の選択肢を取得するため、Companyモデルから全ての企業を取得
-        $companies = Company::all();
+        // 6.ログインユーザー以外の商品だけ表示
+        $query->where('user_id', '!=', Auth::id());
 
-        // 'index'ビューにデータを渡して表示
-        return view('index', compact('products', 'companies'));
+        // 7.商品番号で昇順に並び替え、結果を取得する
+        $products = $query->orderBy('company_id', 'asc')->get();
+
+        // 8.ビュー（index）に取得したデータを渡して表示する
+        return view('index', compact('products'));
     }
 
     /**
@@ -77,7 +85,7 @@ class ProductsController extends Controller
                 'company_id' => $request -> get('company_id'), // 会社ID
                 'price' => $request -> get('price'), // 価格
                 'stock' => $request -> get('stock'), // 在庫数
-                'comment' => $request -> get('comment'), // コメント
+                'description' => $request -> get('description'), // 商品説明
             ]);
             //ファイルがアップロードされていればそのパスを保存
             if ($request -> hasFile('img_path')) {
@@ -95,17 +103,15 @@ class ProductsController extends Controller
                 $product -> img_path = '/storage/' . $filePath;
             }
 
-            //　商品情報をデータベースに保存
+            // 商品情報をデータベースに保存しコミット
             $product -> save();
-            // すべてが成功したらトランザクションをコミット
             DB::commit();
 
-            // 商品登録が完了したメッセージと共に新規登録画面にリダイレクト
+            // 商品登録が完了時のメッセージ、リダイレクト先、例外時のエラー
             return redirect()
-                -> route('products.create', $product)
+                -> route('mypage.index', $product)
                 -> with('success', '商品登録が完了しました');
             } catch (\Exception $e) {
-                // 例外が発生した場合はロールバック
                 DB::rollBack();
                 return back() -> with('error', '商品登録が出来ませんでした:' . $e -> getMessage());
             }
@@ -161,9 +167,10 @@ class ProductsController extends Controller
         DB::beginTransaction();
         try {           
             $product -> product_name = $request -> product_name; //入力された商品名をプロパティに代入
+            $product -> company_id = $request -> company_id; //会社ID
             $product -> price = $request -> price; //価格
             $product -> stock = $request -> stock; //在庫数
-            $product -> comment = $request -> comment; // コメント
+            $product -> description = $request -> description; // コメント
 
             if ($request -> hasFile('img_path')) { //更新内容に画像ファイルが含まれていたときの処理
                 // すでに画像が保存されている場合、古い画像を削除する

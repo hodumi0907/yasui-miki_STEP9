@@ -14,10 +14,15 @@ return new class extends Migration
     public function up()
     {
         Schema::create('sales', function (Blueprint $table) {
-            $table -> id();
-            $table -> integer('product_id');//参照先のproductテーブルとデータ型を合わせる
+            $table -> bigIncrements('id');
+            $table -> unsignedBigInteger('user_id');
+            $table -> unsignedBigInteger('product_id');
+            $table -> bigInteger('quantity');
             $table -> timestamps(); //'created_at'と'updated_at'をまとめてLaravelのデフォルトメソッドにかえる
-            $table -> foreign('product_id') -> references('id') -> on('products'); //外部キーの制約
+            
+            //外部キーの制約
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('product_id')->references('id')->on('products');
         });
     }
 

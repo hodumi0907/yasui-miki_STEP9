@@ -1,41 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-<div class = "container">
+<div class="container">
     
-    <h1 class = "mb-4">商品新規登録</h1>
+    <h1 class="mb-4">商品新規登録</h1>
 
-    <form method = "POST" action="{{ route('products.store') }}" enctype = "multipart/form-data">
+    <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
 
         @csrf
 
-        <div class = "mb-3">
-            <label for = "product_name" class = "form-label">商品名:</label>
+        <div class="mb-3">
+            <label for="product_name" class="form-label">商品名:</label>
             <input
-                id = "product_name"
-                type = "text"
-                name = "product_name"
-                class = "form-control @error('product_name') is-invalid @enderror"
+                id="product_name"
+                type="text"
+                name="product_name"
+                class="form-control @error('product_name') is-invalid @enderror"
             >
             @error('product_name')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
-        </div>
-
-        <div class = "mb-3">
-            <label for = "company_id" class = "form-label">メーカー名</label>
-            <select
-                class = "form-select"
-                id = "company_id"
-                name = "company_id">
-                
-                @foreach($companies as $company)
-                    <option
-                        value = "{{ $company -> id }}">
-                        {{ $company -> company_name }}
-                    </option>
-                @endforeach
-            </select>
         </div>
 
         <div class = "mb-3">
@@ -52,6 +36,16 @@
         </div>
 
         <div class = "mb-3">
+            <label for = "description" class = "form-label">商品説明:</label>
+            <textarea
+                id = "description"
+                name = "description"
+                class = "form-control"
+                rows = "3"
+            ></textarea>
+        </div>
+        
+        <div class = "mb-3">
             <label for = "stock" class = "form-label">在庫数:</label>
             <input
                 id = "stock"
@@ -62,16 +56,6 @@
             @error('stock')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
-        </div>
-
-        <div class = "mb-3">
-            <label for = "comment" class = "form-label">コメント:</label>
-            <textarea
-                id = "comment"
-                name = "comment"
-                class = "form-control"
-                rows = "3"
-            ></textarea>
         </div>
 
         <div class = "mb-3">
@@ -89,7 +73,7 @@
         </div>
 
         <button type = "submit" class = "btn btn-primary">新規登録</button>
-        <a href = "{{ route('products.index') }}" class = "btn btn-primary mb-3">戻る</a>
+        <a href = "{{ route('mypage.index') }}" class = "btn btn-primary mb-3">戻る</a>
 
     </form>
 </div>

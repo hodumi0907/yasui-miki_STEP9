@@ -55,12 +55,25 @@
                             </div>
                         </div>
 
-                        <!--ここにあったログイン状態を保持する（Remember Me）を削除-->
-                        <!--基本削除しない-->
+                        <div class="row mb-3"> <!--ログイン状態を保持するチェックボックス-->
+                            <div class="col-md-6 offset-md-3">
+                                <div class="form-check">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        name="remember"
+                                        id="remember" {{ old('remember') ? 'checked' : '' }}>
+                                    <label
+                                        class="form-check-label" for="remember">
+                                            {{ __('ログイン状態を保持する') }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class = "row mb-0"> <!--ボタンを横並びに配置-->
                             <div class = "col-md-4 offset-md-4 text-center">
-
+                                
                                 <a href = "{{ route('register') }}" class = "btn btn-warning"> <!--新規登録ボタン-->
                                     {{ __('新規登録') }}
                                 </a>
@@ -78,4 +91,5 @@
         </div>
     </div>
 </div>
+
 @endsection

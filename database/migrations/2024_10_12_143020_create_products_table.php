@@ -14,15 +14,19 @@ return new class extends Migration
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
-            $table -> id();
-            $table -> integer('company_id'); //参照先のcompaniesテーブルとデータ型を合わせる
-            $table -> string('product_name');
-            $table -> integer('price'); //初期値：string
+            $table -> bigIncrements('id');
+            $table -> unsignedBigInteger('user_id'); //登録したユーザー以外の商品表示に必要
+            $table -> unsignedBigInteger('company_id');
+            $table -> string('product_name', 255);
+            $table -> integer('price');
             $table -> integer('stock');
-            $table -> text('comment') -> nullable();
-            $table -> string('img_path') -> nullable();
+            $table -> string('description', 255);
+            $table -> string('img_path', 255);
             $table -> timestamps(); //'created_at'と'updated_at'をまとめてLaravelのデフォルトメソッドにかえる
-            $table -> foreign('company_id') -> references('id') -> on('companies'); //外部キーの制約
+
+            //外部キー制約
+            $table -> foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table -> foreign('company_id') -> references('id') -> on('companies') -> onDelete('cascade');
         });
     }
 

@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route; //"Route"というツールを使うために必要な部品を取り込む
-use App\Http\Controllers\ProductsController; //ProductControllerに繋ぐ
 use Illuminate\Support\Facades\Auth; //"Auth"という部品（ユーザー認証（ログイン）に関する処理）を使う
+use App\Http\Controllers\ProductsController; //ProductControllerに繋ぐ
+use App\Http\Controllers\MyPageController; //マイページに繋ぐ
 
 /*
 |--------------------------------------------------------------------------
@@ -31,10 +32,14 @@ Auth::routes();
 //authミドルウェアで認証されたユーザーだけがアクセスできるルート
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/products', [ProductsController::class, 'index']) -> name('products.index');//商品一覧
-    Route::get('/products/create', [ProductsController::class, 'create']) -> name('products.create'); //商品新規登録画面
+    Route::get('/mypage/products/create', [MyPageController::class, 'create'])->name('products.create'); //商品新規登録画面
     Route::get('/products/{product}', [ProductsController::class, 'show']) -> name('products.show'); //商品詳細ページ
     Route::get('/products/{product}/edit', [ProductsController::class, 'edit']) -> name('products.edit'); //商品編集画面
     Route::post('/products', [ProductsController::class, 'store']) -> name('products.store'); //商品登録処理
     Route::put('/products/{product}', [ProductsController::class, 'update']) -> name('products.update'); //商品登録処理
     Route::delete('/products/{product}', [ProductsController::class, 'destroy']) -> name('products.destroy'); //商品削除処理
+
+    Route::get('/mypage', [MyPageController::class, 'index'])->middleware('auth')->name('mypage.index'); //マイページ
+    Route::view('/contact', 'contact')->name('contact'); //お問い合わせフォーム
+    Route::get('/user/edit', [MyPageController::class, 'edit'])->name('user.edit'); //ユーザー情報編集
 });
