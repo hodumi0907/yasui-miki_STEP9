@@ -12,6 +12,8 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <!-- 外部のCSSファイルを読み込むためのコード -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -49,7 +51,7 @@
                             <a class="nav-link" href="{{ url('/') }}">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('mypage.index') }}">マイページ</a>
+                                <a class="nav-link" href="{{ route('mypage.user_index') }}">マイページ</a>
                             </li>
 
                         <!-- Authentication Links -->
@@ -121,7 +123,7 @@
                         <a class="nav-link" href="{{ route('contact') }}">お問い合わせ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('mypage.index') }}">マイページ</a>
+                        <a class="nav-link" href="{{ route('mypage.user_index') }}">マイページ</a>
                     </li>
                 </ul>
             </div>
