@@ -10,8 +10,9 @@ class Product extends Model//Productという名前のツールを作る
     use HasFactory; //ダミーデータを代入する機能を使うことを宣言
 
     protected $fillable = [ //データベースに追加が許可されている属性
-        'company_id',
         'product_name',
+        'company_id',
+        'user_id',
         'stock',
         'price',
         'description',
