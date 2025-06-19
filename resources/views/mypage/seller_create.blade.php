@@ -1,0 +1,80 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+    
+    <h1 class="mb-4">商品新規登録</h1>
+
+    <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
+
+        @csrf
+
+        <div class="mb-3">
+            <label for="product_name" class="form-label">商品名:</label>
+            <input
+                id="product_name"
+                type="text"
+                name="product_name"
+                class="form-control @error('product_name') is-invalid @enderror"
+            >
+            @error('product_name')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class = "mb-3">
+            <label for = "price" class = "form-label">価格:</label>
+            <input
+                id = "price"
+                type = "number"
+                name = "price"
+                class = "form-control @error('price') is-invalid @enderror"
+            >
+            @error('price')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class = "mb-3">
+            <label for = "description" class = "form-label">商品説明:</label>
+            <textarea
+                id = "description"
+                name = "description"
+                class = "form-control"
+                rows = "3"
+            ></textarea>
+        </div>
+        
+        <div class = "mb-3">
+            <label for = "stock" class = "form-label">在庫数:</label>
+            <input
+                id = "stock"
+                type = "number"
+                name = "stock"
+                class = "form-control @error('stock') is-invalid @enderror"
+            >
+            @error('stock')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class = "mb-3">
+            <label for = "img_path" class = "form-label">商品画像:</label>
+            <input
+                id = "img_path"
+                type = "file"
+                name = "img_path"
+                class = "form-control @error('img_path') is-invalid @enderror"
+                accept="image/jpeg,image/png,image/gif"
+            >
+            @error('img_path')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <button type = "submit" class = "btn btn-primary">新規登録</button>
+        <a href = "{{ route('mypage.user_index') }}" class = "btn btn-primary mb-3">戻る</a>
+
+    </form>
+</div>
+@endsection
