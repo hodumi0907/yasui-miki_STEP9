@@ -4,7 +4,7 @@
 <div class="container">
     <h1 class="col-auto">アカウント情報編集</h1>
 
-    <form method="POST" action="{{ route('account.update') }}">
+    <form method="POST" action="{{ route('user.update') }}">
         @csrf
         @method('PUT')
 
@@ -98,7 +98,6 @@
             </div>
         </div>
 
-        <!-- パスワードは空欄にして、入力された場合のみ更新する形がおすすめです -->
         <div class="row mb-3 align-items-center">
             <div class="col-auto">
                 <label for="password" class="form-label">パスワード：</label>
