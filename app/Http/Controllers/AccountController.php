@@ -58,7 +58,7 @@ class AccountController extends Controller
     public function edit()
     {
         $user = Auth::user(); // ログイン中ユーザー取得
-        return view('user_edit', compact('user'));
+        return view('mypage.user_edit', compact('user'));
     }
 
     /**
@@ -82,7 +82,7 @@ class AccountController extends Controller
 
         $user->update($data);
 
-        return redirect()->route('account.edit')->with('success', 'アカウント情報を更新しました。');
+        return redirect()->route('mypage.user_index')->with('success', 'アカウント情報を更新しました。');
     }
 
     /**
