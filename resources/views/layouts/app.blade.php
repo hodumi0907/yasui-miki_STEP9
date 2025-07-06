@@ -47,12 +47,14 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         <!-- ナビゲーションリンク：ログインユーザー名の左側に表示 -->
+                        @if (!request()->routeIs('login', 'register')) <!-- Homeとマイページはログイン後に画面でのみ表示 -->
                             <li class="nav-item">
                             <a class="nav-link" href="{{ url('/') }}">Home</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('mypage.user_index') }}">マイページ</a>
                             </li>
+                        @endif
 
                         <!-- Authentication Links -->
                         @guest
@@ -116,15 +118,17 @@
         <footer class="navbar navbar-expand-md navbar-light bg-light border-top"> <!-- フッター（共通） -->
             <div class="container justify-content-center">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('contact') }}">お問い合わせ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('mypage.user_index') }}">マイページ</a>
-                    </li>
+                @if (!request()->routeIs('login', 'register'))  <!-- Homeとマイページはログイン後に画面でのみ表示 -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('contact') }}">お問い合わせ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('mypage.user_index') }}">マイページ</a>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </footer>
