@@ -43,13 +43,6 @@ class MyPageController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
-        $request->validate([ // バリデーション
-            'name' => 'required|string|max:255',
-            'name_kanji' => 'required|string|max:255',
-            'name_kana' => 'nullable|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,'.$user->id,
-            'password' => 'nullable|string|min:8|confirmed',
-        ]);
 
         // データ更新
         $user->name = $request->name;
