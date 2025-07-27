@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product; // 商品モデルを使う前提
 use App\Models\Sale;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\PurchaseRequest;
 
 class PurchaseController extends Controller
 {
@@ -47,28 +48,35 @@ class PurchaseController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function showPurchaseForm(Product $product) // 購入画面表示
+    // 購入画面表示
+    public function showPurchaseForm(Product $product)
     {
         return view('buyer', compact('product'));
     }
 
     // 購入処理（購入確定）
-    public function purchase(Request $request, Product $product)
+    public function purchase(PurchaseRequest $request, Product $product)
     {
-        // トランザクション処理で在庫減算と販売履歴登録を想定
+        $purchaseQuantity = (int) $request->input('purchase_quantity');
+
+        // 在庫数チェック
+        if ($purchaseQuantity > $product->stock) {
+            return redirect()->back()->withErrors(['purchase_quantity' => '在庫がありません。'])->withInput();
+        }
+
         DB::beginTransaction();
 
         try {
             // 在庫が足りるかチェック
-            if ($product->stock < 1) {
-                return redirect()->back()->with('error', '在庫がありません。');
-            }
-
-            // 在庫を1減らす
-            $product->stock -= 1;
+            $product->stock -= $purchaseQuantity;
             $product->save();
 
-            // salesテーブルへのレコード登録などの処理（必要に応じて実装）
+            // salesテーブルへの購入履歴登録
+            Sale::create([
+                'user_id'     => auth()->id(), // ログインユーザーのID
+                'product_id'  => $product->id,
+                'quantity'     => $purchaseQuantity,
+            ]);
 
             DB::commit();
 
