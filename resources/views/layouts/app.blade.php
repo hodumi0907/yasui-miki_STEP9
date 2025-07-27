@@ -100,15 +100,28 @@
         </nav>
 
         <main class="py-4">
+            <!-- 成功メッセージ -->
             @if (session('success'))
-                <div class="alert alert-success">
+                <div class="alert alert-success container">
                     {{ session('success') }}
                 </div>
             @endif
 
+            <!-- エラーメッセージ -->
             @if (session('error'))
-                <div class="alert alert-danger">
+                <div class="alert alert-danger container">
                     {{ session('error') }}
+                </div>
+            @endif
+
+            <!-- バリデーションエラーの表示 -->
+            @if ($errors->any())
+                <div class="alert alert-danger container">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
             @endif
             
