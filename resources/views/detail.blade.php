@@ -26,7 +26,7 @@
         <i class="fa-regular fa-heart"></i>
     </button>
 
-    <a href="{{ route('purchase.form', $product) }}" class="btn btn-success btn-sm mx-3">カートに追加</a>
+    <a href="{{ route('purchase.form', $product) }}" class="btn btn-success mx-3">カートに追加</a>
     <a href="{{ route('products.index') }}" class="btn btn-primary mt-3">商品一覧画面に戻る</a>
 </div>
 @endsection
