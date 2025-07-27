@@ -18,8 +18,6 @@ class PurchaseRequest extends FormRequest
                 'required',
                 'integer',
                 'min:1',
-                // 在庫数は動的に取得するのでafterでバリデーションにカスタムメッセージを使う形が良いです
-                // ここで在庫数制限をする場合はコントローラ側で追加チェック推奨
             ],
         ];
     }
