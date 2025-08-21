@@ -4,7 +4,7 @@
 <div class="container">
     <h1 class="col-auto">アカウント情報編集</h1>
 
-    <form method="POST" action="{{ route('user.update') }}">
+    <form method="POST" action="{{ route('mypage.update') }}">
         @csrf
         @method('PUT')
 
