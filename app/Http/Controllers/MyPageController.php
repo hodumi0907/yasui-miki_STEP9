@@ -26,14 +26,6 @@ class MyPageController extends Controller
         return view('mypage.user_index', compact('user', 'myProducts', 'purchasedProducts'));
     }
 
-
-    public function create()
-    {
-        return view('create');
-    
-    }
-
-
     public function edit()
     {
         $user = Auth::user();
