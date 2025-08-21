@@ -6,8 +6,7 @@ use App\Http\Controllers\ProductsController; //商品一覧、商品詳細、購
 use App\Http\Controllers\PurchaseController; //購入処理（購入確定・在庫更新など）
 use App\Http\Controllers\ContactController; //お問い合わせフォーム
 use App\Http\Controllers\ProductsManageController; //商品出品登録・編集・出品詳細
-use App\Http\Controllers\MyPageController; //マイページ（購入履歴・出品履歴）
-use App\Http\Controllers\AccountController; //アカウント情報編集
+use App\Http\Controllers\MyPageController; //ユーザー情報（マイページ・アカウント編集）
 
 /*
 |--------------------------------------------------------------------------
@@ -50,10 +49,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     // ▼ マイページ関連(MyPageController)
     Route::get('/mypage/user_index', [MyPageController::class, 'user_index'])->middleware('auth')->name('mypage.user_index'); //マイページ
-
-    // ▼ アカウント管理(AccountController)
-    Route::get('/user/edit', [AccountController::class, 'edit'])->name('user.edit'); //ユーザー情報編集
-    Route::put('/user/update', [AccountController::class, 'update'])->name('user.update'); //ユーザー情報更新処理
+    Route::get('/mypage/edit', [MyPageController::class, 'edit'])->name('mypage.edit'); //ユーザー情報編集
+    Route::put('/mypage/update', [MyPageController::class, 'update'])->name('mypage.update'); //ユーザー情報更新処理
 
     // ▼ お問い合わせ(ContactController)
     Route::get('/contact', [ContactController::class, 'create'])->name('contact'); //フォーム表示
