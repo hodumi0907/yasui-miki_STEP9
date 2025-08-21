@@ -31,8 +31,10 @@ class ProductsManageController extends Controller
     {
             //Companyのデータベースから全ての会社情報を取得する
             $companies = Company::all();
+            // ログイン中のユーザー情報も渡す
+            $user = Auth::user();
             //'product.create'ビューにデータを渡して表示する
-            return view('mypage.seller_create', compact('companies'));
+            return view('mypage.seller_create', compact('companies', 'user' ));
     }
 
     /**
