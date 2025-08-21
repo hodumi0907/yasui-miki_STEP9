@@ -49,7 +49,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     // ▼ マイページ関連(MyPageController)
     Route::get('/mypage/user_index', [MyPageController::class, 'user_index'])->middleware('auth')->name('mypage.user_index'); //マイページ
-    Route::get('/mypage/edit', [MyPageController::class, 'edit'])->name('mypage.edit'); //ユーザー情報編集
+    Route::get('/mypage/edit', [MyPageController::class, 'edit'])->name('mypage.user_edit'); //ユーザー情報編集
     Route::put('/mypage/update', [MyPageController::class, 'update'])->name('mypage.update'); //ユーザー情報更新処理
 
     // ▼ お問い合わせ(ContactController)
