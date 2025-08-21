@@ -5,7 +5,7 @@
     <h1 class="mb-4">マイページ</h1>
     
 <!-- アカウント編集ボタン -->
-    <a href="{{ route('user.edit') }}" class="btn btn-primary mb-3">アカウント情報を編集</a>
+    <a href="{{ route('mypage.user_edit') }}" class="btn btn-primary mb-3">アカウント情報を編集</a>
 
 <!-- ログイン中のユーザー情報 -->
     <table class="table">
