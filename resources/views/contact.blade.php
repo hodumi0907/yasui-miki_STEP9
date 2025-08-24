@@ -13,7 +13,7 @@
         </div>
     @endif
 
-    <form action="{{ route('contact.store') }}" method="POST">
+    <form action="{{ route('contact.send') }}" method="POST">
         @csrf
         <div class="mb-3">
             <label for="name" class="form-label">名前</label>
