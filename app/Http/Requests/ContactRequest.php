@@ -36,8 +36,10 @@ class ContactRequest extends FormRequest
         return [
             //バリデーションエラーメッセージ
             'name.required' => '名前を入力してください',
+            'name.max' => '名前は50文字以内で入力してください',
             'email.required' => 'メールアドレスを入力してください',
             'email.email' => '正しい形式で入力してください',
+            'email.max' => 'メールアドレスは255文字以内で入力してください',
             'message.required' => 'お問い合わせ内容を入力してください',
         ];
     }
