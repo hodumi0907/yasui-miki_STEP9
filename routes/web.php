@@ -54,5 +54,5 @@ Route::group(['middleware' => 'auth'], function () {
 
     // ▼ お問い合わせ(ContactController)
     Route::get('/contact', [ContactController::class, 'create'])->name('contact'); //フォーム表示
-    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store'); //送信処理
+    Route::post('/contact', [ContactController::class, 'send'])->name('contact.send'); //送信処理
 });
