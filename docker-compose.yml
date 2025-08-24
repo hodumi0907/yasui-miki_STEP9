@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     build:
@@ -23,6 +21,18 @@ services:
       MYSQL_PASSWORD: laravelpass
     volumes:
       - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"           # ブラウザ http://localhost:8080
+    environment:
+      PMA_HOST: db          # MySQL サービス名
+      PMA_USER: laraveluser
+      PMA_PASSWORD: laravelpass
+    depends_on:
+      - db
 
 volumes:
   db_data:
