@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Product;
 
 class Sale extends Model
 {
@@ -15,8 +16,8 @@ class Sale extends Model
         'quantity',
     ];
 
-    public function products()
+    public function product()
     {
-        return $this -> belongsTo(Products::class);
+        return $this -> belongsTo(Product::class);
     }
 }
