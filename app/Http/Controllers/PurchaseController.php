@@ -51,7 +51,7 @@ class PurchaseController extends Controller
     // 購入画面表示
     public function showPurchaseForm(Product $product)
     {
-        return view('buyer', compact('product'));
+        return view('userpage.buyer', compact('product'));
     }
 
     // 購入処理（購入確定）

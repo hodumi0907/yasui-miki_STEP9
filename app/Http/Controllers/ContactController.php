@@ -26,7 +26,7 @@ class ContactController extends Controller
      */
     public function create()
     {
-        return view('contact');
+        return view('userpage.contact');
     }
 
     /**
@@ -58,7 +58,7 @@ class ContactController extends Controller
     public function show($id)
     {
         //問い合わせフォームを表示
-        return view('contact.show');
+        return view('userpage.contact');
 
     }
 

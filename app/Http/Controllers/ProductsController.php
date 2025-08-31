@@ -40,7 +40,7 @@ class ProductsController extends Controller
         $products = $query->orderBy('company_id', 'asc')->get();
 
         // 取得した商品の一覧を「index」ビューに渡して表示
-        return view('index', compact('products'));
+        return view('userpage.index', compact('products'));
     }
 
     /**
@@ -75,7 +75,7 @@ class ProductsController extends Controller
         //resources/views/products/detail.blade.phpを表示する
         //商品詳細でsearch と company_idを受け取る
         $product = Product::with('company') -> findOrFail($id);
-        return view('detail', compact('product')) -> with([
+        return view('userpage.detail', compact('product')) -> with([
             'search' => $request -> query('search'),
             'company_id' => $request -> query('company_id')
         ]);
