@@ -13,13 +13,13 @@ class Like extends Model
         'product_id',
     ];
 
-    //Usersとのリレーション
+    //Userとのリレーション
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    //Productsとのリレーション
+    //Productとのリレーション
     public function product()
     {
         return $this->belongsTo(Product::class);
