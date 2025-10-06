@@ -15,7 +15,7 @@ class LikeController extends Controller
         //ログインユーザーを取得
         $user = Auth::user();
         // 既にお気に入り登録済みか確認
-        if (!$ProduckLike->likedBy($user)) {
+        if (!$product->likedBy($user)) {
             // お気に入り登録していればlikesテーブルからレコード削除
             Like::create([
                 'user_id' => $user->id,
@@ -33,7 +33,7 @@ class LikeController extends Controller
         //ログインユーザーを取得
         $user = Auth::user();
         // 既にお気に入り登録済みか確認
-        if ($ProduckLike->likedBy($User)){
+        if ($product->likedBy($user)){
         // 登録されていなければ追加
             Like::where('user_id', $user->id)
                 ->where('product_id', $product->id)
