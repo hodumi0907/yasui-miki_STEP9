@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;//使うツールを取り込む
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model//Productという名前のツールを作る
+class Product extends Model
 {
-    use HasFactory; //ダミーデータを代入する機能を使うことを宣言
-
-    protected $fillable = [ //データベースに追加が許可されている属性
+    //ダミーデータを代入する機能を使うことを宣言
+    use HasFactory; 
+    //データベースに追加が許可されている属性
+    protected $fillable = [
         'product_name',
         'company_id',
         'user_id',
@@ -19,13 +20,21 @@ class Product extends Model//Productという名前のツールを作る
         'img_path',
     ];
 
-    public function sales() //Salesとのリレーション。Salesに対してProductは親（hasMany）にあたる
-    {
+    //Salesとのリレーション
+    public function sales(){
         return $this -> hasMany(Sales::class);
     }
 
-    public function company() //companiesとのリレーション。companiesに対してProductは子（belongsTo）にあたる
+    //companiesとのリレーション
+    public function company()
     {
         return $this -> belongsTo(company::class);
     }
+
+    //likesとのリレーション
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
 }
