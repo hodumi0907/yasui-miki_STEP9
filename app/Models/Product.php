@@ -25,13 +25,13 @@ class Product extends Model
         return $this -> hasMany(Sales::class);
     }
 
-    //companiesとのリレーション
+    //companyとのリレーション
     public function company()
     {
         return $this -> belongsTo(company::class);
     }
 
-    //likesとのリレーション
+    //likeとのリレーション
     public function likes()
     {
         return $this->hasMany(Like::class);
