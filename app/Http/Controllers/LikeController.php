@@ -9,41 +9,39 @@ use Illuminate\Support\Facades\Auth;
 
 class LikeController extends Controller
 {
-    public function addLike(Product $product) //お気に入り登録
+    //お気に入り登録処理
+    public function addLike(Product $product)
     {
-        $user = Auth::user(); //ログインユーザーを取得
-
+        //ログインユーザーを取得
+        $user = Auth::user();
         // 既にお気に入り登録済みか確認
-        $alreadyLiked = Like::where('user_id', $user->id)
-                            ->where('product_id', $product->id)
-                            ->exists();
-
-        if (!$alreadyLiked) {
-            // 登録されていなければ追加
+        if (!$ProduckLike->likedBy($user)) {
+            // お気に入り登録していればlikesテーブルからレコード削除
             Like::create([
                 'user_id' => $user->id,
                 'product_id' => $product->id,
             ]);
         }
-
-        // 現在のこの商品のお気に入り登録数
-        $likeCount = $product->likes()->count();
-
         return response()->json([
-            'success' => true,
-            'liked' => !$alreadyLiked, // 今回登録されたかどうか
-            'like_count' => $likeCount
+            'likes_count' => $ProduckLike->likes()->count(),
         ]);
     }
 
+    //お気に入り削除処理
     public function destroy(Product $product)
     {
+        //ログインユーザーを取得
         $user = Auth::user();
+        // 既にお気に入り登録済みか確認
+        if ($ProduckLike->likedBy($User)){
+        // 登録されていなければ追加
+            Like::where('user_id', $user->id)
+                ->where('product_id', $product->id)
+                ->delete();
+        }
 
-        Like::where('user_id', $user->id)
-            ->where('product_id', $product->id)
-            ->delete();
-
-        return response()->json(['success' => true]);
+        return response()->json([
+            'likes_count' =>$ProduckLike->likes()->count(),
+            ]);
     }
 }
