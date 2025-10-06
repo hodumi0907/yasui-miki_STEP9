@@ -7,6 +7,7 @@ use App\Http\Controllers\PurchaseController; //購入処理（購入確定・在
 use App\Http\Controllers\ContactController; //お問い合わせフォーム
 use App\Http\Controllers\ProductsManageController; //商品出品登録・編集・出品詳細
 use App\Http\Controllers\MyPageController; //ユーザー情報（マイページ・アカウント編集）
+use App\Http\Controllers\LikeController; //お気に入り登録
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/products/{product}', [ProductsController::class, 'show'])->name('products.detail'); //商品詳細
     Route::get('/products/{product}/buy', [PurchaseController::class, 'showPurchaseForm'])->name('purchase.form'); //購入
     Route::post('/products/{product}/buy', [PurchaseController::class, 'purchase'])->name('purchase.process'); //購入処理
+    Route::post('/products/{product}/like',[likeController::class,'addLike'])->name('products.like'); //お気に入り登録
+    Route::delete('/products/{product}/like',[likeController::class,'destroy'])->name('products.unlike'); //お気に入り登録解除
+
 
     // ▼ 出品商品管理（出品者向け/ProductsManageController)
     Route::get('/mypage/products/create', [ProductsManageController::class, 'create'])->name('products.create'); //商品新規登録
