@@ -43,4 +43,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    //likeとのリレーション。likeに対してUserは1対1（hasOne）の関係
+    public function like()
+    {
+        return $this->hasOne(Product::class);
+    }
 }
