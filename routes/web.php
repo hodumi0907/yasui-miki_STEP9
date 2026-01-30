@@ -39,9 +39,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/products/{product}', [ProductsController::class, 'show'])->name('products.detail'); //商品詳細
     Route::get('/products/{product}/buy', [PurchaseController::class, 'showPurchaseForm'])->name('purchase.form'); //購入
     Route::post('/products/{product}/buy', [PurchaseController::class, 'purchase'])->name('purchase.process'); //購入処理
-    Route::post('/products/{product}/like',[likeController::class,'addLike'])->name('products.like'); //お気に入り登録
-    Route::delete('/products/{product}/like',[likeController::class,'destroy'])->name('products.unlike'); //お気に入り登録解除
-
+    Route::post('/products/{product}/like',[LikeController::class,'toggle'])->name('products.like'); //お気に入り登録
 
     // ▼ 出品商品管理（出品者向け/ProductsManageController)
     Route::get('/mypage/products/create', [ProductsManageController::class, 'create'])->name('products.create'); //商品新規登録

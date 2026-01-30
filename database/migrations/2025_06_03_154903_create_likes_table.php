@@ -15,13 +15,10 @@ return new class extends Migration
     {
         Schema::create('likes', function (Blueprint $table) {
             $table -> bigIncrements('id');  // bigintのauto increment
-            $table -> unsignedBigInteger('user_id');
-            $table -> unsignedBigInteger('product_id');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table -> timestamps(); // created_at, updated_at はnullableなのでそのままでOK
-
-            // 外部キー制約追加
-            $table -> foreign('user_id') -> references('id')-> on('users') -> onDelete('cascade');
-            $table -> foreign('product_id') -> references('id') -> on('products') -> onDelete('cascade');
+            $table->unique(['user_id', 'product_id']);
         });
     }
 

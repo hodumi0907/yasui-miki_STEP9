@@ -53,7 +53,7 @@
 
     <!-- 購入した商品 -->
     <h2 class="mt-5">【購入した商品】</h2>
-    <!--
+    
     @if($purchasedProducts->isEmpty())
         <p>購入した商品はありません。</p>
     @else
@@ -78,6 +78,6 @@
             </tbody>
         </table>
     @endif
-    -->
+
 </div>
 @endsection

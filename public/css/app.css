@@ -1,14 +1,11 @@
 /* お気に入りボタンのクリックアクション */
 /* 通常時は白抜き */
 .like-btn i.fa-heart {
-  color: white;
-  transition: color 0.2s;
+/* color: white; */
+transition: color 0.2s;
 }
-/* ホバー時は赤 */
-/*.like-btn:hover i.fa-heart {
-  color: red;
-}
+
 /* クリック時に赤 */
 .like-btn.active i.fa-heart {
-  color: red;
+color: red;
 }

@@ -6,12 +6,12 @@
     
     <div class = "search mt-5"> <!-- 検索フォーム -->
         <form action = "{{ route('products.index') }}" method = "GET" class = "row g-3">
-            <div class = "col-sm-12 col-md-3"> <!-- キーワード検索 -->
+            <div class = "col-sm-12 col-md-3"> <!-- 商品名検索 -->
                 <input
                     type = "text"
                     name = "search"
                     class = "form-control" 
-                    placeholder = "検索キーワード"
+                    placeholder = "商品名"
                     value = "{{ request('search') }}"
                 >
             </div>

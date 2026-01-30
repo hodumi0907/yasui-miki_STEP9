@@ -45,7 +45,7 @@ class ContactMail extends Mailable
     {
         //使用するviewを返す
         return new Content(
-            view: 'contact_mail', //メール専用ビューを使用
+            view: 'userpage.contact_mail', //メール専用ビューを使用
             with: [
                 'contact' => $this->contact,
             ],

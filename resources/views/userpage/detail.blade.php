@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 @section('content')
 <div class="container">
     <h1 class="mb-4">商品情報詳細</h1>
@@ -22,8 +22,13 @@
     </dl>
 
     <!-- お気に入りボタン -->
-    <button id="favorite-btn" class="btn btn-outline-danger me-3" type="button" aria-label="お気に入り登録">
-        <i class="fa-regular fa-heart"></i>
+    <button
+        class="like-btn btn btn-outline-danger me-3 {{ $liked ? 'liked' : '' }}"
+        type="button"
+        aria-label="お気に入り登録"
+        data-product-id="{{ $product->id }}">
+        
+        <i class="{{ $liked ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
     </button>
 
     <a href="{{ route('purchase.form', $product) }}" class="btn btn-success mx-3">カートに追加</a>

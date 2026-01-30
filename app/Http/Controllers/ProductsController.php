@@ -6,6 +6,8 @@ use App\Http\Requests\ProductRequest; // バリデーション
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
+use App\Models\Like;
+use Illuminate\Http\JsonResponse; // 追加（返却型明示用）
 
 class ProductsController extends Controller
 {
@@ -75,7 +77,11 @@ class ProductsController extends Controller
         //resources/views/products/detail.blade.phpを表示する
         //商品詳細でsearch と company_idを受け取る
         $product = Product::with('company') -> findOrFail($id);
-        return view('userpage.detail', compact('product')) -> with([
+        $liked = Like::where('user_id', auth()->id())
+            ->where('product_id', $product->id)
+            ->exists();
+
+        return view('userpage.detail', compact('product', 'liked')) -> with([
             'search' => $request -> query('search'),
             'company_id' => $request -> query('company_id')
         ]);
@@ -114,4 +120,5 @@ class ProductsController extends Controller
     {
         //
     }
+
 }
