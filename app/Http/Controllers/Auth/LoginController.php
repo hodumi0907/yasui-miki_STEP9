@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
@@ -40,21 +41,19 @@ class LoginController extends Controller
     }
 
     /**
-     * ログイン時のバリデーションをカスタマイズ
+     * ログイン処理
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
+     * @param  \App\Http\Requests\LoginRequest  $request
      */
-    protected function validateLogin(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request -> validate([
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string'],
-        ], [
-            'email.required' => 'メールアドレスを入力してください。',
-            'email.email' => '正しいメールアドレスの形式で入力してください。',
-            'password.required' => 'パスワードを入力してください。',
-        ]);
+        $credentials = $request->only('email', 'password');
+
+        if ($this->attemptLogin($request)) {
+            return $this->sendLoginResponse($request);
+        }
+
+        return $this->sendFailedLoginResponse($request);
     }
 
     /**
