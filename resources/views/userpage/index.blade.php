@@ -55,7 +55,7 @@
             <tbody> <!-- 商品情報 繰り返し表示 -->
                 @foreach ($products as $product)
                     <tr>
-                        <td>{{ $product -> company_id }}</td>
+                        <td>{{ $product -> id }}</td>
                         <td><img src = "{{ asset($product -> img_path) }}" alt = "画像なし" width = "100"></td>
                         <td>{{ $product -> product_name }}</td>
                         <td>{{ $product -> description }}</td>

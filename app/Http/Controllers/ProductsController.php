@@ -38,8 +38,8 @@ class ProductsController extends Controller
         // ログインユーザー以外の商品だけ表示
         $query->where('user_id', '!=', Auth::id());
 
-        // company_id（会社番号）で昇順に並べて、条件に合う商品を全部取得
-        $products = $query->orderBy('company_id', 'asc')->get();
+        // products_id（商品番号）で昇順に並べて、条件に合う商品を全部取得
+        $products = $query->orderBy('id', 'asc')->get();
 
         // 取得した商品の一覧を「index」ビューに渡して表示
         return view('userpage.index', compact('products'));
