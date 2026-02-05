@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -83,19 +83,16 @@ class AuthController extends Controller
         //
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        //
-        $request->vallidate([
-            'email'=>'required|email',
-            'password'=>'required',
-        ]);
         if(!Auth::attempt($request->only('email','password'))){
             return response()->json(['message'=>'ログインに失敗しました'],401);
         }
+
         $user=Auth::User();
         //アクセストークンを発行
         $token=$user->createToken('auth_token')->plainTextToken;
+        
         return response()->Json([
             'access_token'=>$token,
             'token_type'=>'Bearer',
