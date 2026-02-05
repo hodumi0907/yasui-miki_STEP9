@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\AccountRequest;
 use App\Models\Sale;
 use App\Models\Product;
 use App\Models\Purchase;
@@ -32,7 +33,7 @@ class MyPageController extends Controller
         return view('mypage.user_edit', compact('user'));
     }
 
-    public function update(Request $request)
+    public function update(AccountRequest $request)
     {
         $user = Auth::user();
 
@@ -48,6 +49,8 @@ class MyPageController extends Controller
 
         $user->save();
 
-        return redirect()->route('mypage.user_index')->with('success', 'アカウント情報を更新しました。');
+        return redirect()
+            ->route('mypage.user_index')
+            ->with('success', 'アカウント情報を更新しました。');
     }
 }
