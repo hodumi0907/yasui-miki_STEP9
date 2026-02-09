@@ -28,7 +28,7 @@ class RegisterRequest extends FormRequest
             'name_kanji' => ['required', 'string', 'max:255'],
             'name_kana' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8', 'alpha_num', 'confirmed'],
         ];
     }
 
