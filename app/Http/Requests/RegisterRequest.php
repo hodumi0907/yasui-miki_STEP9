@@ -24,11 +24,11 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => 'required', 'string', 'max:255',
             'name_kanji' => ['required', 'string', 'max:255'],
             'name_kana' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8', 'alpha_num', 'confirmed'],
         ];
     }
 
@@ -42,7 +42,8 @@ class RegisterRequest extends FormRequest
             'email.unique' => 'このメールアドレスはすでに登録されています。',
             'password.required' => 'パスワードを入力してください。',
             'password.min' => 'パスワードは8文字以上で入力してください。',
-            'password.confirmed' => 'パスワードが一致しません（半角英数のみ使用可能）',
+            'password.alpha_num' => 'パスワードは半角英数字のみ使用できます。',
+            'password.confirmed' => 'パスワードが一致しません。',
         ];
     }    
 }
