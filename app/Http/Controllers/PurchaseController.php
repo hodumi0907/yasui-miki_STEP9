@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Product; // 商品モデルを使う前提
 use App\Models\Sale;
 use Illuminate\Support\Facades\DB;
@@ -59,17 +58,11 @@ class PurchaseController extends Controller
     {
         $purchaseQuantity = (int) $request->input('purchase_quantity');
 
-        // 在庫数チェック
-        if ($purchaseQuantity > $product->stock) {
-            return redirect()->back()->withErrors(['purchase_quantity' => '在庫がありません。'])->withInput();
-        }
-
         DB::beginTransaction();
 
         try {
-            // 在庫が足りるかチェック
-            $product->stock -= $purchaseQuantity;
-            $product->save();
+            // 在庫減算
+            $product->decrementStock($purchaseQuantity);
 
             // salesテーブルへの購入履歴登録
             Sale::create([
@@ -81,11 +74,17 @@ class PurchaseController extends Controller
             DB::commit();
 
             // 購入後は商品一覧にリダイレクト
-            return redirect()->route('products.index')->with('success', '購入が完了しました。');
+            return redirect()
+                ->route('products.index')
+                ->with('success', '購入が完了しました。');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', '購入処理に失敗しました。');
+
+            return redirect()
+                ->back()
+                ->withErrors(['purchase_quantity' => $e->getMessage()])
+                ->withInput();
         }
     }
 

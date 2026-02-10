@@ -36,5 +36,21 @@ class Product extends Model
     {
         return $this->hasMany(Like::class);
     }
+
+    /**
+     * 在庫を減らす
+     *
+     * @param int $quantity
+     * @throws \Exception
+     */
+    public function decrementStock(int $quantity): void
+    {
+        if ($quantity > $this->stock) {
+            throw new \Exception('在庫が不足しています。');
+        }
+
+        $this->stock -= $quantity;
+        $this->save();
+    }
     
 }
