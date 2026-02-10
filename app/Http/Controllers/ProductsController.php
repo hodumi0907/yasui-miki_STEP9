@@ -18,30 +18,15 @@ class ProductsController extends Controller
      */
     public function index(ProductRequest $request)
     {
-        $query = Product::query();
+        $products = Product::query()
+        ->searchByName($request->search)
+        ->minPrice($request->price_min)
+        ->maxPrice($request->price_max)
+        ->excludeOwn(Auth::id())
+        ->orderBy('id', 'asc')
+        ->get();
 
-        // 「検索キーワード」が空文字ではない場合はそのキーワードを含む商品名だけに絞る
-        if ($request -> has('search') && $request -> search != '') {
-            $query -> where('product_name', 'like', '%' . $request->search . '%');
-        }
-
-        // 価格の下限が指定されていたら、その価格以上の商品だけに絞る
-        if ($request->price_min !== null) {
-            $query->where('price', '>=', $request->price_min);
-        }
-
-        // 価格の上限が指定されていたら、その価格以下の商品だけに絞る
-        if ($request->price_max !== null) {
-            $query->where('price', '<=', $request->price_max);
-        }
-
-        // ログインユーザー以外の商品だけ表示
-        $query->where('user_id', '!=', Auth::id());
-
-        // products_id（商品番号）で昇順に並べて、条件に合う商品を全部取得
-        $products = $query->orderBy('id', 'asc')->get();
-
-        // 取得した商品の一覧を「index」ビューに渡して表示
+        // 取得した商品の一覧を表示
         return view('userpage.index', compact('products'));
     }
 
